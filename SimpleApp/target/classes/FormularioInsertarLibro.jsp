@@ -1,3 +1,4 @@
+<%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.sql.DriverManager"%>
@@ -29,9 +30,7 @@
 					<%
 						ResultSet rs = null;
 						try {
-							String sql = "select distinct(categoria) from Libro";
-							JDBCHelper jdbc = new JDBCHelper();
-							rs = jdbc.seleccionarRegistros(sql);
+							rs = Libro.listarTodoCategorias();
 							while (rs.next()) {
 					%>
 					<option value="<%=rs.getString("categoria")%>">

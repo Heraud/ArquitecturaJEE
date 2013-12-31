@@ -1,3 +1,4 @@
+<%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.sql.DriverManager"%>
@@ -14,20 +15,11 @@
 </head>
 <body>
 	<%
-		Connection conexion = null;
-		Statement sentencia = null;
 		ResultSet rs = null;
 		String id = request.getParameter("id");
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conexion = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/librodb2", "root",
-					"hesleither");
-			sentencia = conexion.createStatement();
-
-			rs = sentencia.executeQuery("SELECT * FROM libro WHERE id="
-					+ id);
+			rs = Libro.buscarLibroPorId(Integer.parseInt(id));
 			rs.next();
 	%>
 
@@ -49,9 +41,7 @@
 				<label for="categoria">Categoría: </label> <select name="categoria">
 					<option value="<%=rs.getString("categoria")%>"><%=rs.getString("categoria")%></option>
 					<%
-						String sql = "select distinct(categoria) from Libro";
-							JDBCHelper jdbc = new JDBCHelper();
-							rs = jdbc.seleccionarRegistros(sql);
+						rs = Libro.listarTodoCategorias();
 							while (rs.next()) {
 					%>
 					<option value="<%=rs.getString("categoria")%>">
@@ -65,13 +55,8 @@
 
 		</fieldset>
 	</form>
-
-
 	<%
-		} catch (ClassNotFoundException e) {
-			System.out.println("Error en la carga del driver: "
-					+ e.getMessage());
-		} catch (SQLException e) {
+		}catch (SQLException e) {
 			System.out.println("Error accediendo a las BDs: "
 					+ e.getMessage());
 		} finally {
@@ -83,23 +68,6 @@
 							+ e.getMessage());
 				}
 
-			}
-			if (sentencia != null) {
-				try {
-					sentencia.close();
-				} catch (SQLException e) {
-					System.out.println("Error cerrando sentencia: "
-							+ e.getMessage());
-				}
-
-			}
-			if (conexion != null) {
-				try {
-					conexion.close();
-				} catch (SQLException e) {
-					System.out.println("Error cerrando la conexión: "
-							+ e.getMessage());
-				}
 			}
 		}
 	%>

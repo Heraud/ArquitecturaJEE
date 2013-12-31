@@ -1,3 +1,4 @@
+<%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.sql.DriverManager"%>
@@ -16,9 +17,7 @@
 <body>
 	<%
 		String id = request.getParameter("id");
-		String sql = "DELETE FROM Libro WHERE id='" + id + "'";
-		JDBCHelper jdbc = new JDBCHelper();
-		jdbc.modificarRegitro(sql);
+		Libro.eliminar(Integer.parseInt(id));
 		response.sendRedirect("MostrarLibros.jsp");
 	%>
 </body>

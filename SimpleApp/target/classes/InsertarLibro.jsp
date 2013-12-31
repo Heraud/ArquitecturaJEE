@@ -1,3 +1,4 @@
+<%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.sql.DriverManager"%>
@@ -20,9 +21,7 @@
 		String titulo = request.getParameter("titulo");
 		String categoria = request.getParameter("categoria");
 			
-		String sql = "INSERT INTO LIBRO (isbn, titulo, categoria) VALUES('"+isbn+"','"+titulo+"','"+categoria+"')";
-		JDBCHelper helper = new JDBCHelper();
-		helper.modificarRegitro(sql);
+		Libro.insertar(isbn, titulo, categoria);
 			
 		response.sendRedirect("MostrarLibros.jsp");
 	%>

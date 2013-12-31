@@ -15,7 +15,9 @@ public class JDBCHelper {
 	public int modificarRegitro(String sql) {
 		Connection conexion = null;
 		Statement sentencia = null;
+		
 		int filasAfectadas = 0;
+		
 		try {
 			Class.forName(driver);
 			conexion = DriverManager.getConnection(url, usuario, clave);

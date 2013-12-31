@@ -1,3 +1,4 @@
+<%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.sql.DriverManager"%>
@@ -19,9 +20,7 @@
 		String isbn = request.getParameter("isbn");
 		String titulo = request.getParameter("titulo");
 		String categoria = request.getParameter("categoria");		
-		String sql = "UPDATE Libro SET isbn='"+isbn+"',titulo='"+titulo+"',categoria='"+categoria+"' WHERE id='"+id+"'";
-		JDBCHelper jdbc = new JDBCHelper();
-		jdbc.modificarRegitro(sql);			
+		Libro.editar(Integer.parseInt(id), isbn, titulo, categoria);		
 		response.sendRedirect("MostrarLibros.jsp");
 	%>
 </body>
