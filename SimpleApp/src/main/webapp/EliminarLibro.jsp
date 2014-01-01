@@ -17,7 +17,8 @@
 <body>
 	<%
 		String id = request.getParameter("id");
-		Libro.eliminar(Integer.parseInt(id));
+		Libro libro = new Libro(Integer.parseInt(id));
+		libro.eliminar();
 		response.sendRedirect("MostrarLibros.jsp");
 	%>
 </body>

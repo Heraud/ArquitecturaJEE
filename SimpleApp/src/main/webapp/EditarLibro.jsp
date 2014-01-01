@@ -19,8 +19,9 @@
 		String id = request.getParameter("id");
 		String isbn = request.getParameter("isbn");
 		String titulo = request.getParameter("titulo");
-		String categoria = request.getParameter("categoria");		
-		Libro.editar(Integer.parseInt(id), isbn, titulo, categoria);		
+		String categoria = request.getParameter("categoria");
+		Libro libro = new Libro(Integer.parseInt(id));
+		libro.editar();		
 		response.sendRedirect("MostrarLibros.jsp");
 	%>
 </body>
