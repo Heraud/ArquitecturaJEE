@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
@@ -15,37 +16,34 @@
 </head>
 <body>
 	<%
-		ResultSet rs = null;
 		String id = request.getParameter("id");
-
-		try {
-			rs = Libro.buscarLibroPorId(Integer.parseInt(id));
-			rs.next();
+			Libro libro = new Libro(Integer.parseInt(id));
+			libro = libro.buscarLibroPorId();
 	%>
 
 	<form action="EditarLibro.jsp" method="post">
 		<fieldset>
 			<legend>Insertar Libro</legend>
 			<p>
-				<input type="hidden" value="<%=rs.getString("id")%>" name="id" />
+				<input type="hidden" value="<%=libro.getId()%>" name="id" />
 			</p>
 			<p>
 				<label for="isbn">ISBN: </label> <input type="text"
-					value="<%=rs.getString("isbn")%>" name="isbn" />
+					value="<%=libro.getIsbn()%>" name="isbn" />
 			</p>
 			<p>
 				<label for="titulo">Titulo: </label> <input type="text"
-					value="<%=rs.getString("titulo")%>" name="titulo" />
+					value="<%=libro.getTitulo()%>" name="titulo" />
 			</p>
 			<p>
 				<label for="categoria">Categoría: </label> <select name="categoria">
-					<option value="<%=rs.getString("categoria")%>"><%=rs.getString("categoria")%></option>
+					<option value="<%=libro.getCategoria()%>"><%=libro.getCategoria()%></option>
 					<%
-						rs = Libro.listarTodoCategorias();
-							while (rs.next()) {
+					List<String> listCateoria = Libro.listarTodoCategorias();
+					for (String categoria : listCateoria) {
 					%>
-					<option value="<%=rs.getString("categoria")%>">
-						<%=rs.getString("categoria")%>
+					<option value="<%=categoria%>">
+						<%=categoria%>
 					</option>
 					<% } %>
 			</p>
@@ -55,21 +53,5 @@
 
 		</fieldset>
 	</form>
-	<%
-		}catch (SQLException e) {
-			System.out.println("Error accediendo a las BDs: "
-					+ e.getMessage());
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					System.out.println("Error cerrando el ResultSet: "
-							+ e.getMessage());
-				}
-
-			}
-		}
-	%>
 </body>
 </html>

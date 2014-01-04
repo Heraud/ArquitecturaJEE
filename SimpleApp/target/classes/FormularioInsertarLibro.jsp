@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
@@ -29,32 +30,16 @@
 					<option value="seleccionar">seleccionar</option>
 					<%
 						ResultSet rs = null;
-						try {
-							rs = Libro.listarTodoCategorias();
-							while (rs.next()) {
+						List<String> listCateoria = Libro.listarTodoCategorias();
+						for (String categoria : listCateoria) {
 					%>
-					<option value="<%=rs.getString("categoria")%>">
-						<%=rs.getString("categoria")%>
+					<option value="<%=categoria%>">
+						<%=categoria%>
 					</option>
 					<%
 						}
-						} catch (SQLException e) {
-							System.out.println("Error accediendo a las BDs: "
-									+ e.getMessage());
-						} finally {
-							if (rs != null) {
-								try {
-									rs.close();
-								} catch(SQLException e) {
-									System.out.println("Error cerrando el ResultSet: "
-											+ e.getMessage());
-								}
-
-							}
-						}
-					%> 
+					%>
 				</select>
-
 
 			</p>
 			<p>

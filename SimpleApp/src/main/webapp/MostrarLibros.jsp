@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="com.heraud.clases.Libro"%>
 <%@page import="com.heraud.init.JDBCHelper"%>
 <%@page import="java.sql.SQLException"%>
@@ -15,52 +16,36 @@
 </head>
 <body>
 	<a href="FormularioInsertarLibro.jsp">Agregar</a>
-	
-	<br/>
+
+	<br />
 	<select name="categoria">
 		<option value="seleccionar">seleccionar</option>
 		<%
-			ResultSet rs = null;
-			try {				
-				rs = Libro.listarTodoCategorias();
-				while (rs.next()) {
+			List<String> listCateoria = Libro.listarTodoCategorias();
+			for (String categoria : listCateoria) {
 		%>
-		<option value="<%=rs.getString("categoria")%>">
-			<%=rs.getString("categoria")%>
-		</option>
-		<% } %>
+		<option value="<%=categoria%>">
+			<%=categoria%>
+		</option> 
+		<%
+			}
+		%>
 	</select>
 	<br />
 	<br />
-	
+
 	<%
-			rs = Libro.listarTodoLibros();
-			while (rs.next()) {
+		List<Libro> listLibro = Libro.listarTodoLibros();
+		for (Libro libro : listLibro) {
 	%>
-	
-	<%=rs.getString("id")%>
-	<%=rs.getString("isbn")%>
-	<%=rs.getString("titulo")%>
-	<%=rs.getString("categoria")%>
-	
-	<a href="FormularioEditarLibro.jsp?id=<%=rs.getString("id")%>">Editar</a>
-	<a href="EliminarLibro.jsp?id=<%=rs.getString("id")%>">Eliminar</a>
+	<%=libro.getId()%>
+	<%=libro.getIsbn()%>
+	<%=libro.getTitulo()%>
+	<%=libro.getCategoria()%>
+	<a href="FormularioEditarLibro.jsp?id=<%=libro.getId()%>">Editar</a>
+	<a href="EliminarLibro.jsp?id=<%=libro.getId()%>">Eliminar</a>
 	<br />
 	<%
-		}
-		}catch (SQLException e) {
-			System.out.println("Error accediendo a las BDs: "
-					+ e.getMessage());
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					System.out.println("Error cerrando el ResultSet: "
-							+ e.getMessage());
-				}
-
-			}
 		}
 	%>
 </body>

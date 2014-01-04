@@ -1,6 +1,9 @@
 package com.heraud.clases;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.heraud.init.JDBCHelper;
 
@@ -9,17 +12,20 @@ public class Libro {
 	private String isbn;
 	private String titulo;
 	private String categoria;
-		
+	
+	public Libro() {
+	}
+
 	public Libro(Integer id) {
 		super();
 		this.id = id;
 	}
-	
+
 	public Libro(String isbn, String titulo, String categoria) {
 		super();
 		this.isbn = isbn;
 		this.titulo = titulo;
-		this.categoria = categoria; 
+		this.categoria = categoria;
 	}
 
 	public Libro(Integer id, String isbn, String titulo, String categoria) {
@@ -29,7 +35,6 @@ public class Libro {
 		this.titulo = titulo;
 		this.categoria = categoria;
 	}
-	
 
 	public Integer getId() {
 		return id;
@@ -62,43 +67,87 @@ public class Libro {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
-	
-	
 
-	//Métodos
-	public static ResultSet listarTodoLibros() {
+	// Métodos
+	public static List<Libro> listarTodoLibros() {
 		JDBCHelper helper = new JDBCHelper();
 		ResultSet rs = helper
 				.seleccionarRegistros("Select id, isbn, titulo, categoria from libro");
-		return rs;
+
+		List<Libro> list = new ArrayList<Libro>();
+
+		try {
+			Libro libro = null;
+			while (rs.next()) {
+				libro = new Libro();
+				libro.setId(Integer.parseInt(rs.getString("id")));
+				libro.setIsbn(rs.getString("isbn"));
+				libro.setTitulo(rs.getString("titulo"));
+				libro.setCategoria(rs.getString("categoria"));
+
+				list.add(libro);
+
+			}
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+
+		return list;
 	}
 
-	public static ResultSet listarTodoCategorias() {
+	public static List<String> listarTodoCategorias() {
 		JDBCHelper helper = new JDBCHelper();
 		ResultSet rs = helper
 				.seleccionarRegistros("select distinct(categoria) from Libro");
-		return rs;
+		List<String> list = new ArrayList<String>();
+
+		try {
+			String categoria=null;
+			while (rs.next()) {
+				categoria=rs.getString("categoria");
+				list.add(categoria);
+
+			}
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+
+		return list;
 	}
 
 	public void insertar() {
 		JDBCHelper helper = new JDBCHelper();
 		String sql = "INSERT INTO LIBRO (isbn, titulo, categoria) VALUES('"
-				+ this.isbn + "','" + this.titulo + "','" + this.categoria + "')";
+				+ this.isbn + "','" + this.titulo + "','" + this.categoria
+				+ "')";
 		helper.modificarRegitro(sql);
 	}
 
 	public void editar() {
 		JDBCHelper helper = new JDBCHelper();
-		String sql = "UPDATE Libro SET isbn='" + this.isbn + "',titulo='" + this.titulo
-				+ "',categoria='" + this.categoria + "' WHERE id='" + this.id + "'";
+		String sql = "UPDATE Libro SET isbn='" + this.isbn + "',titulo='"
+				+ this.titulo + "',categoria='" + this.categoria
+				+ "' WHERE id='" + this.id + "'";
 		helper.modificarRegitro(sql);
 	}
 
-	public ResultSet buscarLibroPorId() {
+	public Libro buscarLibroPorId() {
 		JDBCHelper helper = new JDBCHelper();
 		ResultSet rs = helper
 				.seleccionarRegistros("SELECT * FROM libro WHERE id=" + this.id);
-		return rs;
+		Libro libro = new Libro();
+		try {
+			rs.next();			
+			libro.setId(Integer.parseInt(rs.getString("id")));
+			libro.setIsbn(rs.getString("isbn"));
+			libro.setTitulo(rs.getString("titulo"));
+			libro.setCategoria(rs.getString("categoria"));			
+		} catch (SQLException e) {
+			System.out.println("Ërror: "+e.getMessage());
+		}
+		
+		
+		return libro;
 	}
 
 	public void eliminar() {
