@@ -1,7 +1,5 @@
 package com.heraud.clases;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +10,7 @@ public class Libro {
 	private String isbn;
 	private String titulo;
 	private String categoria;
-	
+
 	public Libro() {
 	}
 
@@ -68,50 +66,20 @@ public class Libro {
 		this.categoria = categoria;
 	}
 
-	// Métodos
+	// Métodos==============
 	public static List<Libro> listarTodoLibros() {
-		JDBCHelper helper = new JDBCHelper();
-		ResultSet rs = helper
-				.seleccionarRegistros("Select id, isbn, titulo, categoria from libro");
-
+		JDBCHelper<Libro> helper = new JDBCHelper<Libro>();
 		List<Libro> list = new ArrayList<Libro>();
-
-		try {
-			Libro libro = null;
-			while (rs.next()) {
-				libro = new Libro();
-				libro.setId(Integer.parseInt(rs.getString("id")));
-				libro.setIsbn(rs.getString("isbn"));
-				libro.setTitulo(rs.getString("titulo"));
-				libro.setCategoria(rs.getString("categoria"));
-
-				list.add(libro);
-
-			}
-		} catch (SQLException e) {
-			System.out.println("Error: " + e.getMessage());
-		}
-
+		String sql = "Select id, isbn, titulo, categoria from libro";
+		list = helper.seleccionarRegistros(sql, Libro.class);
 		return list;
 	}
 
 	public static List<String> listarTodoCategorias() {
-		JDBCHelper helper = new JDBCHelper();
-		ResultSet rs = helper
-				.seleccionarRegistros("select distinct(categoria) from Libro");
+		JDBCHelper<String> helper = new JDBCHelper<String>();
 		List<String> list = new ArrayList<String>();
-
-		try {
-			String categoria=null;
-			while (rs.next()) {
-				categoria=rs.getString("categoria");
-				list.add(categoria);
-
-			}
-		} catch (SQLException e) {
-			System.out.println("Error: " + e.getMessage());
-		}
-
+		list = helper.seleccionarRegistros(
+				"select distinct(categoria) from Libro", String.class);
 		return list;
 	}
 
@@ -132,22 +100,11 @@ public class Libro {
 	}
 
 	public Libro buscarLibroPorId() {
-		JDBCHelper helper = new JDBCHelper();
-		ResultSet rs = helper
-				.seleccionarRegistros("SELECT * FROM libro WHERE id=" + this.id);
-		Libro libro = new Libro();
-		try {
-			rs.next();			
-			libro.setId(Integer.parseInt(rs.getString("id")));
-			libro.setIsbn(rs.getString("isbn"));
-			libro.setTitulo(rs.getString("titulo"));
-			libro.setCategoria(rs.getString("categoria"));			
-		} catch (SQLException e) {
-			System.out.println("Ërror: "+e.getMessage());
-		}
-		
-		
-		return libro;
+		JDBCHelper<Libro> helper = new JDBCHelper<Libro>();
+		List<Libro> list = new ArrayList<Libro>();
+		list = helper.seleccionarRegistros("SELECT * FROM libro WHERE id="
+				+ this.id, Libro.class);
+		return list.get(0);
 	}
 
 	public void eliminar() {
